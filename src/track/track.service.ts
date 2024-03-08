@@ -1,26 +1,87 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
+import { Track } from './entities/track.entity';
+import { tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class TrackService {
   create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+    const newTrack = new Track({
+      id: uuidv4(),
+      name: createTrackDto.name,
+      duration: createTrackDto.duration,
+      artistId: createTrackDto.artistId ?? null,
+      albumId: createTrackDto.albumId ?? null,
+    });
+    tracks.push(newTrack);
+    return newTrack;
   }
 
   findAll() {
-    return `This action returns all track`;
+    return tracks;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  findOne(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'trackId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const currentTrack = tracks.find((track) => track.id === id);
+    if (!currentTrack) {
+      throw new HttpException(
+        `track with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return currentTrack;
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  update(id: string, updateTrackDto: UpdateTrackDto) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'trackId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentTrack = tracks.find((track) => track.id === id);
+
+    if (!currentTrack) {
+      throw new HttpException(
+        `track with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    currentTrack.name = updateTrackDto.name;
+    currentTrack.duration = updateTrackDto.duration;
+    currentTrack.artistId = updateTrackDto.artistId;
+    currentTrack.albumId = updateTrackDto.albumId;
+
+    return currentTrack;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'trackId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentTrackIndex = tracks.findIndex((track) => track.id === id);
+    if (currentTrackIndex === -1) {
+      throw new HttpException(
+        `track with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    tracks.splice(currentTrackIndex, 1);
+
     return `This action removes a #${id} track`;
   }
 }
