@@ -1,26 +1,85 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { validate as uuidValidate } from 'uuid';
+import { Artist } from './entities/artist.entity';
+import { artists } from 'src/dataBase/database';
 
 @Injectable()
 export class ArtistService {
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    const newArtist = new Artist({
+      id: uuidv4(),
+      name: createArtistDto.name,
+      grammy: createArtistDto.grammy,
+    });
+    artists.push(newArtist);
+    return newArtist;
   }
 
   findAll() {
-    return `This action returns all artist`;
+    return artists;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  findOne(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'artistId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const currentArtist = artists.find((artist) => artist.id === id);
+    if (!currentArtist) {
+      throw new HttpException(
+        `artist with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return currentArtist;
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  update(id: string, updateArtistDto: UpdateArtistDto) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'artistId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentArtist = artists.find((artist) => artist.id === id);
+
+    if (!currentArtist) {
+      throw new HttpException(
+        `artist with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    currentArtist.name = updateArtistDto.name;
+    currentArtist.grammy = updateArtistDto.grammy;
+
+    return currentArtist;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'artistId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentArtistIndex = artists.findIndex((artist) => artist.id === id);
+    if (currentArtistIndex === -1) {
+      throw new HttpException(
+        `artist with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    artists.splice(currentArtistIndex, 1);
+    // TODO set track.artistId album.artistId to NULL
+
     return `This action removes a #${id} artist`;
   }
 }
