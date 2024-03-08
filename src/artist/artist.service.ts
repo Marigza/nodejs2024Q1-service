@@ -4,7 +4,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { Artist } from './entities/artist.entity';
-import { albums, artists } from 'src/dataBase/database';
+import { albums, artists, tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class ArtistService {
@@ -84,8 +84,14 @@ export class ArtistService {
       return album;
     });
 
+    tracks.forEach((track) => {
+      if (track.artistId === id) {
+        return (track.artistId = null);
+      }
+      return track;
+    });
+
     artists.splice(currentArtistIndex, 1);
-    // TODO set track.artistId to NULL
 
     return `This action removes a #${id} artist`;
   }

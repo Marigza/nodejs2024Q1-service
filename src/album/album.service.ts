@@ -3,7 +3,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { Album } from './entities/album.entity';
-import { albums } from 'src/dataBase/database';
+import { albums, tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class AlbumService {
@@ -78,8 +78,14 @@ export class AlbumService {
       );
     }
 
+    tracks.forEach((track) => {
+      if (track.albumId === id) {
+        return (track.albumId = null);
+      }
+      return track;
+    });
+
     albums.splice(currentAlbumIndex, 1);
-    // TODO set track.albumID to NULL
 
     return `This action removes a #${id} album`;
   }
