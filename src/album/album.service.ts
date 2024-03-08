@@ -1,26 +1,86 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
+import { Album } from './entities/album.entity';
+import { albums } from 'src/dataBase/database';
 
 @Injectable()
 export class AlbumService {
   create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+    const newAlbum = new Album({
+      id: uuidv4(),
+      name: createAlbumDto.name,
+      year: createAlbumDto.year,
+      artistId: createAlbumDto.artistId ?? null,
+    });
+    albums.push(newAlbum);
+    return newAlbum;
   }
 
   findAll() {
-    return `This action returns all album`;
+    return albums;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} album`;
+  findOne(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'albumId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const currentAlbum = albums.find((album) => album.id === id);
+    if (!currentAlbum) {
+      throw new HttpException(
+        `album with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return currentAlbum;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'albumId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentAlbum = albums.find((album) => album.id === id);
+
+    if (!currentAlbum) {
+      throw new HttpException(
+        `album with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    currentAlbum.name = updateAlbumDto.name;
+    currentAlbum.year = updateAlbumDto.year;
+    currentAlbum.artistId = updateAlbumDto.artistId;
+
+    return currentAlbum;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    if (!uuidValidate(id)) {
+      throw new HttpException(
+        'albumId is invalid (not uuid)',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const currentAlbumIndex = albums.findIndex((album) => album.id === id);
+    if (currentAlbumIndex === -1) {
+      throw new HttpException(
+        `album with id=${id} doesn't exist`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    albums.splice(currentAlbumIndex, 1);
+    // TODO set track.albumID to NULL
+
     return `This action removes a #${id} album`;
   }
 }
