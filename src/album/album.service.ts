@@ -3,7 +3,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { Album } from './entities/album.entity';
-import { albums, tracks } from 'src/dataBase/database';
+import { albums, favorites, tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class AlbumService {
@@ -84,6 +84,10 @@ export class AlbumService {
       }
       return track;
     });
+
+    const favAlbums = favorites.albums.filter((album) => album.id !== id);
+
+    favorites.albums = favAlbums;
 
     albums.splice(currentAlbumIndex, 1);
 

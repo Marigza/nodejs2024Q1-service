@@ -4,7 +4,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate as uuidValidate } from 'uuid';
 import { Artist } from './entities/artist.entity';
-import { albums, artists, tracks } from 'src/dataBase/database';
+import { albums, artists, favorites, tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class ArtistService {
@@ -90,6 +90,10 @@ export class ArtistService {
       }
       return track;
     });
+
+    const favArtists = favorites.artists.filter((artist) => artist.id !== id);
+
+    favorites.artists = favArtists;
 
     artists.splice(currentArtistIndex, 1);
 

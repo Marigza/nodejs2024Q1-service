@@ -3,7 +3,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { Track } from './entities/track.entity';
-import { tracks } from 'src/dataBase/database';
+import { favorites, tracks } from 'src/dataBase/database';
 
 @Injectable()
 export class TrackService {
@@ -79,6 +79,10 @@ export class TrackService {
         HttpStatus.NOT_FOUND,
       );
     }
+
+    const favTracks = favorites.tracks.filter((track) => track.id !== id);
+
+    favorites.tracks = favTracks;
 
     tracks.splice(currentTrackIndex, 1);
 
