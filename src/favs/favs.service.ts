@@ -1,7 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
-import { FavoritesResponse } from './entities/fav.model';
 import { albums, artists, favorites, tracks } from 'src/dataBase/database';
 import { validate as uuidValidate } from 'uuid';
 
