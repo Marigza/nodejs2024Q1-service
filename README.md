@@ -8,14 +8,21 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/Marigza/nodejs2024Q1-service.git
 ```
 
 ## Installing NPM modules
 
+Open your newly created folder 'nodejs2024Q1-service' in your code editor
+In terminal run following command:
+
 ```
 npm install
 ```
+## Setting environment
+
+Rename file .env.example to .env
+You can change PORT in which app will be running.
 
 ## Running application
 
