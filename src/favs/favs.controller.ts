@@ -10,7 +10,7 @@ export class FavsController {
   @ApiOperation({ summary: 'get all favorites' })
   @ApiResponse({ status: 200 })
   @Get()
-  findAll() {
+  async findAll() {
     return this.favsService.findAll();
   }
 }
@@ -23,7 +23,7 @@ export class FavsTrackController {
   @ApiOperation({ summary: 'add track to favorites' })
   @ApiResponse({ status: 201 })
   @Post(':id')
-  addTrackToFavs(@Param('id') id: string) {
+  async addTrackToFavs(@Param('id') id: string) {
     return this.favsService.addTrackToFavs(id);
   }
 
@@ -31,7 +31,7 @@ export class FavsTrackController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.favsService.removeTrackFromFavs(id);
   }
 }
@@ -44,7 +44,7 @@ export class FavsAlbumController {
   @ApiOperation({ summary: 'add album to favorites' })
   @ApiResponse({ status: 201 })
   @Post(':id')
-  addAlbumToFavs(@Param('id') id: string) {
+  async addAlbumToFavs(@Param('id') id: string) {
     return this.favsService.addAlbumToFavs(id);
   }
 
@@ -52,7 +52,7 @@ export class FavsAlbumController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.favsService.removeAlbumFromFavs(id);
   }
 }
@@ -65,7 +65,7 @@ export class FavsArtistController {
   @ApiOperation({ summary: 'add artist to favorites' })
   @ApiResponse({ status: 201 })
   @Post(':id')
-  addAlbumToFavs(@Param('id') id: string) {
+  async addAlbumToFavs(@Param('id') id: string) {
     return this.favsService.addArtistToFavs(id);
   }
 
@@ -73,7 +73,7 @@ export class FavsArtistController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.favsService.removeArtistFromFavs(id);
   }
 }

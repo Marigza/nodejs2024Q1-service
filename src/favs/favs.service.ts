@@ -1,14 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { albums, artists, favorites, tracks } from 'src/dataBase/database';
+import { PrismaService } from '../prisma/prisma.service';
+import { favorites } from 'src/dataBase/database';
 import { validate as uuidValidate } from 'uuid';
 
 @Injectable()
 export class FavsService {
+  constructor(private prisma: PrismaService) {}
+
   findAll() {
     return favorites;
   }
 
-  removeTrackFromFavs(id: string) {
+  async removeTrackFromFavs(id: string) {
     this.checkIdIsUUID(id);
 
     const trackIndex = favorites.tracks.findIndex((track) => track.id === id);
@@ -21,10 +24,12 @@ export class FavsService {
     return `This action removes a track with #${id} from favs`;
   }
 
-  addTrackToFavs(id: string) {
+  async addTrackToFavs(id: string) {
     this.checkIdIsUUID(id);
 
-    const newFavTrack = tracks.find((track) => track.id === id);
+    const newFavTrack = await this.prisma.track.findUnique({
+      where: { id },
+    });
     if (!newFavTrack) {
       this.throw422Exception(id);
     }
@@ -33,10 +38,13 @@ export class FavsService {
     return `This action add a track with #${id} to favs`;
   }
 
-  addAlbumToFavs(id: string) {
+  async addAlbumToFavs(id: string) {
     this.checkIdIsUUID(id);
 
-    const newFavAlbum = albums.find((album) => album.id === id);
+    const newFavAlbum = await this.prisma.album.findUnique({
+      where: { id },
+    });
+
     if (!newFavAlbum) {
       this.throw422Exception(id);
     }
@@ -45,7 +53,7 @@ export class FavsService {
     return `This action add an album with #${id} to favs`;
   }
 
-  removeAlbumFromFavs(id: string) {
+  async removeAlbumFromFavs(id: string) {
     this.checkIdIsUUID(id);
 
     const albumIndex = favorites.albums.findIndex((album) => album.id === id);
@@ -58,10 +66,13 @@ export class FavsService {
     return `This action removes an album with #${id} from favs`;
   }
 
-  addArtistToFavs(id: string) {
+  async addArtistToFavs(id: string) {
     this.checkIdIsUUID(id);
 
-    const newFavArtist = artists.find((artist) => artist.id === id);
+    const newFavArtist = await this.prisma.artist.findUnique({
+      where: { id },
+    });
+
     if (!newFavArtist) {
       this.throw422Exception(id);
     }
@@ -70,7 +81,7 @@ export class FavsService {
     return `This action add an artist with #${id} to favs`;
   }
 
-  removeArtistFromFavs(id: string) {
+  async removeArtistFromFavs(id: string) {
     this.checkIdIsUUID(id);
 
     const artistIndex = favorites.artists.findIndex(

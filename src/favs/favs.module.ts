@@ -6,6 +6,7 @@ import {
   FavsController,
   FavsTrackController,
 } from './favs.controller';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   controllers: [
@@ -15,5 +16,6 @@ import {
     FavsArtistController,
   ],
   providers: [FavsService],
+  imports: [PrismaModule],
 })
 export class FavsModule {}
