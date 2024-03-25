@@ -42,3 +42,10 @@ model Album {
   year        Int
   artistId    String?
 }
+
+model Favorites {
+  id          String @id @default(uuid())
+  artists     String[] 
+  albums      String[]
+  tracks      String[]
+}
