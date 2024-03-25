@@ -26,7 +26,7 @@ export class UserController {
   @ApiResponse({ status: 201, type: User })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -34,7 +34,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: [User] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
 
@@ -42,7 +42,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: User })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
@@ -50,7 +50,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: User })
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
@@ -58,7 +58,7 @@ export class UserController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
 }
