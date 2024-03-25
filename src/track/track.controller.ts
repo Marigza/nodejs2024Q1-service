@@ -22,28 +22,31 @@ export class TrackController {
   @ApiOperation({ summary: 'create track' })
   @ApiResponse({ status: 201, type: Track })
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto) {
     return this.trackService.create(createTrackDto);
   }
 
   @ApiOperation({ summary: 'get all tracks' })
   @ApiResponse({ status: 200, type: [Track] })
   @Get()
-  findAll() {
+  async findAll() {
     return this.trackService.findAll();
   }
 
   @ApiOperation({ summary: 'get track with ID' })
   @ApiResponse({ status: 200, type: Track })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.trackService.findOne(id);
   }
 
   @ApiOperation({ summary: 'update track' })
   @ApiResponse({ status: 200, type: Track })
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
+  ) {
     return this.trackService.update(id, updateTrackDto);
   }
 
@@ -51,7 +54,7 @@ export class TrackController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.trackService.remove(id);
   }
 }
