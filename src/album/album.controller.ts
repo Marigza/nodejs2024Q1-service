@@ -22,28 +22,31 @@ export class AlbumController {
   @ApiOperation({ summary: 'create album' })
   @ApiResponse({ status: 201, type: Album })
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto) {
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
   }
 
   @ApiOperation({ summary: 'get all albums' })
   @ApiResponse({ status: 200, type: [Album] })
   @Get()
-  findAll() {
+  async findAll() {
     return this.albumService.findAll();
   }
 
   @ApiOperation({ summary: 'get album with ID' })
   @ApiResponse({ status: 200, type: Album })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.albumService.findOne(id);
   }
 
   @ApiOperation({ summary: 'update album' })
   @ApiResponse({ status: 200, type: Album })
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
     return this.albumService.update(id, updateAlbumDto);
   }
 
@@ -51,7 +54,7 @@ export class AlbumController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.albumService.remove(id);
   }
 }
