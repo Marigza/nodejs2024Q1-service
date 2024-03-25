@@ -1,0 +1,34 @@
+# docker-compose.yml
+
+version: '3.8'
+services:
+  nest-api:
+    image: marigza/nodejs2024q1-service-nest-api
+    container_name: nest-api
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+      
+  postgres:
+    image: postgres:16.2-alpine3.19
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres:

@@ -8,14 +8,27 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/Marigza/nodejs2024Q1-service.git
+go to branch library-second
 ```
+## For run application in production mode from docker container:
 
-## Installing NPM modules
+Rename file .env.example to .env
+Run command in terminal: docker-compose up
+(If container doesn't running, may be need run command 'docker-compose build' and after building run 'docker-compose up')
+
+## For run application in developer mode  need to install NPM modules
+
+Open your newly created folder 'nodejs2024Q1-service' in your code editor
+In terminal run following command:
 
 ```
 npm install
 ```
+## Setting environment
+
+Rename file .env.example to .env
+You can change PORT and any other variables.
 
 ## Running application
 
@@ -70,3 +83,7 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+### Run vulnerabilities scanning
+
+npm run scan
