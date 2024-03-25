@@ -22,28 +22,31 @@ export class ArtistController {
   @ApiOperation({ summary: 'create artist' })
   @ApiResponse({ status: 201, type: Artist })
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto) {
+  async create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
 
   @ApiOperation({ summary: 'get all artists' })
   @ApiResponse({ status: 200, type: [Artist] })
   @Get()
-  findAll() {
+  async findAll() {
     return this.artistService.findAll();
   }
 
   @ApiOperation({ summary: 'get artist by ID' })
   @ApiResponse({ status: 200, type: Artist })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.artistService.findOne(id);
   }
 
   @ApiOperation({ summary: 'update artist info' })
   @ApiResponse({ status: 200, type: Artist })
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
     return this.artistService.update(id, updateArtistDto);
   }
 
@@ -51,7 +54,7 @@ export class ArtistController {
   @ApiResponse({ status: 204 })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.artistService.remove(id);
   }
 }
